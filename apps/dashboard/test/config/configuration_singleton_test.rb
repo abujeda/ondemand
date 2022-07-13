@@ -409,6 +409,18 @@ class ConfigurationSingletonTest < ActiveSupport::TestCase
     assert_equal false, cfg.files_enable_shell_button
   end
 
+  test "custom_css_files delegates to config object" do
+    cfg = ConfigurationSingleton.new
+    cfg.stubs(:config).returns({custom_css_files: ['test.css']})
+    assert_equal ['test.css'], cfg.custom_css_files
+  end
+
+  test "custom_css_files returns [] when not set" do
+    cfg = ConfigurationSingleton.new
+    cfg.stubs(:config).returns({})
+    assert_equal [], cfg.custom_css_files
+  end
+
   test "inverse navbar is dark" do
     with_modified_env(OOD_NAVBAR_TYPE: 'inverse') do
       assert_equal 'dark', ConfigurationSingleton.new.navbar_type

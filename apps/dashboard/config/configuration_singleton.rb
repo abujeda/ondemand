@@ -31,6 +31,10 @@ class ConfigurationSingleton
     add_string_configs
   end
 
+  def custom_css_files
+    return config.fetch(:custom_css_files, [])
+  end
+
   # All the boolean configurations that can be read through
   # environment variables or through the config file.
   #

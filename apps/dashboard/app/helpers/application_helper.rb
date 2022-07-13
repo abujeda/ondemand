@@ -72,4 +72,8 @@ module ApplicationHelper
       image_tag icon_uri.to_s, class: 'app-icon', title: icon_uri.to_s, "aria-hidden": true
     end
   end
+
+  def custom_css_paths
+    Configuration.custom_css_files.map { |css_file| "/custom/#{css_file}" }
+  end
 end

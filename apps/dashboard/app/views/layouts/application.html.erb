@@ -6,6 +6,9 @@
 
   <%= javascript_include_tag 'application', nonce: true %>
   <%= stylesheet_link_tag 'application', nonce: true, media: 'all' %>
+  <% custom_css_paths.each do |path| %>
+      <%= stylesheet_link_tag path, nonce: true, media: 'all' %>
+  <% end %>
 
   <%= csrf_meta_tags %>
 
