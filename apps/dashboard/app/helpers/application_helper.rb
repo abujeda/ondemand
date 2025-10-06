@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 # Helper for all pages.
+require 'uri'
+
 module ApplicationHelper
   def clusters
     OodCore::Clusters.new(OodAppkit.clusters.select(&:allow?).reject { |c| c.metadata.hidden })
@@ -84,6 +86,13 @@ module ApplicationHelper
     else
       image_tag icon_uri.to_s, class: classes, title: icon_uri.to_s, "aria-hidden": true
     end
+  end
+
+  def files_action_icon_uri(value)
+    uri_value = value.presence || 'fas://paper-plane'
+    URI(uri_value)
+  rescue URI::InvalidURIError
+    URI('fas://paper-plane')
   end
 
   # Creates the list of links to add to the help menu

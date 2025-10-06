@@ -14,6 +14,18 @@
     <% if Configuration.globus_endpoints %>
       <%= render partial: 'globus' %>
     <% end %>
+    <% if @user_configuration.files_action_target %>
+      <% action_target = @user_configuration.files_action_target %>
+      <% action_endpoint = action_target[:endpoint] %>
+      <% action_label = action_target[:label] %>
+      <% action_id = params[:files_action_id].presence || action_target[:action_id] %>
+      <% if action_endpoint.present? && action_label.present? %>
+        <button id="files-action-btn" type="button" class="btn btn-outline-dark btn-sm" data-files-action-endpoint="<%= h(action_endpoint) %>"<% if action_id.present? %> data-files-action-id="<%= h(action_id) %>"<% end %>>
+          <%= icon_tag(files_action_icon_uri(action_target[:icon]), classes: nil) %>
+          <%= h(action_label) %>
+        </button>
+      <% end %>
+    <% end %>
     <button id="copy-move-btn" type="button" class="btn btn-outline-dark btn-sm"><i class="fas fa-copy" aria-hidden="true"></i> Copy/Move</button>
     <button id="delete-btn" type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
 </div>

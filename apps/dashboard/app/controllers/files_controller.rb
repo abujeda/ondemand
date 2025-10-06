@@ -357,7 +357,7 @@ class FilesController < ApplicationController
   end
 
   def fs_params
-    params.permit(:format, :filepath, :fs, :download,  :can_download)
+    params.permit(:format, :filepath, :fs, :download,  :can_download, :files_action_id)
   end
 
   def update_params
@@ -375,4 +375,5 @@ class FilesController < ApplicationController
   def directory_frame_params
     params.permit(:format, :path)
   end
+
 end
