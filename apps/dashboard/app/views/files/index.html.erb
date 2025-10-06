@@ -14,6 +14,16 @@
     <% if Configuration.globus_endpoints %>
       <%= render partial: 'globus' %>
     <% end %>
+    <% if defined?(@files_action_context) && @files_action_context&.enabled? %>
+      <button id="send-files-btn" type="button" class="btn btn-outline-dark btn-sm">
+        <% if (icon_uri = @files_action_context.icon_uri) %>
+          <%= icon_tag(icon_uri, classes: ['me-1']) %>
+        <% else %>
+          <i class="fas fa-paper-plane me-1" aria-hidden="true"></i>
+        <% end %>
+        Send to <%= h(@files_action_context.label) %>
+      </button>
+    <% end %>
     <button id="copy-move-btn" type="button" class="btn btn-outline-dark btn-sm"><i class="fas fa-copy" aria-hidden="true"></i> Copy/Move</button>
     <button id="delete-btn" type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash" aria-hidden="true"></i> Delete</button>
 </div>

@@ -11,6 +11,7 @@ class FilesController < ApplicationController
     request.format = 'json' if request.headers['HTTP_ACCEPT'].split(',').include?('application/json')
     parse_path(fs_params[:filepath], fs_params[:fs])
     validate_path!
+    build_files_action_context
 
     if @path.directory?
       @path.raise_if_cant_access_directory_contents
@@ -357,7 +358,7 @@ class FilesController < ApplicationController
   end
 
   def fs_params
-    params.permit(:format, :filepath, :fs, :download,  :can_download)
+    params.permit(:format, :filepath, :fs, :download,  :can_download, :files_action_id)
   end
 
   def update_params
@@ -374,5 +375,17 @@ class FilesController < ApplicationController
 
   def directory_frame_params
     params.permit(:format, :path)
+  end
+
+  def build_files_action_context
+    config = @user_configuration.files_action_target
+    return if config.blank?
+
+    action_id = fs_params[:files_action_id]
+
+    @files_action_context = FilesActionContext.new(
+      config: config,
+      action_id: action_id
+    )
   end
 end
