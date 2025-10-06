@@ -7,11 +7,6 @@
   data-current-filesystem="<%= @filesystem %>"
   data-download-error-title="<%= t('dashboard.files_directory_download_error_modal_title') %>"
   data-current-files-upload-path="<%= url_for(fs: @filesystem, action: 'upload') if Configuration.upload_enabled? %>"
-  data-files-action-enabled="<%= (!!(@files_action_context&.enabled?)).to_s %>"
-  data-files-action-label="<%= @files_action_context&.label %>"
-  data-files-action-endpoint="<%= @files_action_context&.endpoint %>"
-  data-files-action-icon="<%= @files_action_context&.icon %>"
-  data-files-action-id="<%= h(@files_action_context.action_id) if @files_action_context&.action_id.present? %>"
   >
 
 </div>

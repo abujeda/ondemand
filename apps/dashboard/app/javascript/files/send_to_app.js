@@ -2,35 +2,22 @@ import { CONTENTID } from './data_table.js';
 import { OODAlert, OODAlertSuccess } from '../alert';
 
 export function initSendToApp() {
-  const configElement = document.getElementById('files_page_load_config');
-  if (!configElement) {
-    return;
-  }
-
-  const dataset = configElement.dataset;
-  if (dataset.filesActionEnabled !== 'true') {
-    return;
-  }
-
-  const button = document.getElementById('send-files-btn');
+  const button = document.getElementById('files-action-btn');
   if (!button) {
     return;
   }
 
-  const sendConfig = {
-    endpoint: dataset.filesActionEndpoint,
-    label: dataset.filesActionLabel,
-    actionId: dataset.filesActionId || null
-  };
-
-  if (!sendConfig.endpoint) {
+  const endpoint = button.dataset.filesActionEndpoint;
+  if (!endpoint) {
     return;
   }
 
-  button.addEventListener('click', () => handleSend(button, sendConfig));
+  const actionId = button.dataset.filesActionId || null;
+
+  button.addEventListener('click', () => handleSend(button, endpoint, actionId));
 }
 
-function handleSend(button, config) {
+function handleSend(button, endpoint, actionId) {
   const table = $(CONTENTID).DataTable();
   const selection = table.rows({ selected: true }).data().toArray();
 
@@ -41,9 +28,9 @@ function handleSend(button, config) {
 
   button.setAttribute('disabled', 'disabled');
 
-  const payload = buildPayload(selection, config);
+  const payload = buildPayload(selection, actionId);
 
-  fetch(config.endpoint, {
+  fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -51,35 +38,22 @@ function handleSend(button, config) {
     credentials: 'same-origin',
     body: JSON.stringify(payload)
   })
-    .then(async (response) => {
-      const text = await response.text();
-      let parsed = null;
-
-      if (text) {
-        try {
-          parsed = JSON.parse(text);
-        } catch (_e) {
-          parsed = { message: text };
-        }
-      }
-
+    .then((response) => {
       if (!response.ok) {
-        const message = (parsed && (parsed.error || parsed.message)) || response.statusText || 'Request failed.';
-        throw new Error(message);
+        throw new Error();
       }
 
-      const successMessage = (parsed && parsed.message) || `Sent ${selection.length} item(s) to ${config.label}.`;
-      OODAlertSuccess(successMessage);
+      OODAlertSuccess('Files sent successfully.');
     })
-    .catch((error) => {
-      OODAlert(`Error sending selection to ${config.label}: ${error.message}`);
+    .catch(() => {
+      OODAlert('Failed to send files.');
     })
     .finally(() => {
       button.removeAttribute('disabled');
     });
 }
 
-function buildPayload(selection, config) {
+function buildPayload(selection, actionId) {
   const baseDirectory = history.state.currentDirectory;
   const directoryUrl = history.state.currentDirectoryUrl;
   const filesystem = history.state.currentFilesystem;
@@ -106,7 +80,7 @@ function buildPayload(selection, config) {
   });
 
   return {
-    action_id: config.actionId,
+    action_id: actionId,
     filesystem: filesystem,
     directory: baseDirectory,
     directory_url: directoryUrl,
