@@ -4,7 +4,9 @@ import {} from './file_ops.js';
 import {} from './sweet_alert.js';
 import {} from './uppy_ops.js';
 import { setPageLoadState } from './page_load';
+import { initSendToApp } from './send_to_app';
 
 addEventListener("DOMContentLoaded", (_event) => {
   setPageLoadState();
+  initSendToApp();
 });
